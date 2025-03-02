@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter/X Style Fake Tweet Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #15202b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .tweet-container {
+            width: 100%;
+            max-width: 598px;
+            background-color: #15202b;
+            border: 1px solid #38444d;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .tweet-header {
+            display: flex;
+            padding: 12px 16px;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .back-button {
+            margin-right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1d9bf0;
+        }
+
+        .page-title {
+            font-weight: 800;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .main-content {
+            padding: 12px 16px;
+        }
+
+        .author-section {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .user-name-line {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: #ffffff;
+            margin-right: 4px;
+        }
+
+        .verified-badge {
+            width: 17px;
+            height: 17px;
+            margin-right: 4px;
+        }
+
+        .user-handle {
+            color: #8899a6;
+            font-size: 15px;
+        }
+
+        .tweet-text {
+            color: #ffffff;
+            font-size: 23px;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+
+        .tweet-image {
+            width: 100%;
+            border-radius: 16px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #38444d;
+        }
+
+        .tweet-time {
+            color: #8899a6;
+            font-size: 15px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .tweet-stats {
+            display: flex;
+            padding: 16px 0;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .stat {
+            margin-right: 20px;
+        }
+
+        .stat-number {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: #8899a6;
+        }
+
+        .tweet-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            color: #8899a6;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .action-button svg {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .action-comment:hover {
+            color: #1d9bf0;
+        }
+
+        .action-retweet:hover {
+            color: #00ba7c;
+        }
+
+        .action-like:hover {
+            color: #f91880;
+        }
+
+        .action-share:hover {
+            color: #1d9bf0;
+        }
+
+        .light-mode {
+            background-color: #ffffff;
+        }
+        
+        .light-mode .tweet-container {
+            background-color: #ffffff;
+            border-color: #ebeef0;
+        }
+        
+        .light-mode .tweet-header,
+        .light-mode .tweet-stats,
+        .light-mode .tweet-time {
+            border-bottom-color: #ebeef0;
+        }
+        
+        .light-mode .user-name,
+        .light-mode .tweet-text,
+        .light-mode .stat-number {
+            color: #0f1419;
+        }
+        
+        .light-mode .user-handle,
+        .light-mode .tweet-time,
+        .light-mode .stat-label,
+        .light-mode .action-button {
+            color: #536471;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1d9bf0;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        @media (max-width: 598px) {
+            .tweet-container {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" title="Toggle theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+    </button>
+
+    <div class="tweet-container">
+        <div class="tweet-header">
+            <button class="back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.41L11.71 6.71C12.1 6.32 12.1 5.68 11.71 5.29C11.32 4.9 10.68 4.9 10.29 5.29L4.29 11.29C3.9 11.68 3.9 12.32 4.29 12.71L10.29 18.71C10.68 19.1 11.32 19.1 11.71 18.71C12.1 18.32 12.1 17.68 11.71 17.29L7.41 13H20C20.55 13 21 12.55 21 12C21 11.45 20.55 11 20 11Z" fill="currentColor"/>
+                </svg>
+            </button>
+            <div class="page-title">Post</div>
+        </div>
+
+        <div class="main-content">
+            <div class="author-section">
+                <img src="https://unavatar.io/github/Naxtool2025" alt="Avatar" class="avatar" onerror="this.src='https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png'">
+                <div class="user-info">
+                    <div class="user-name-line">
+                        <span class="user-name">Naxtool2025</span>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMiAyMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMUQ5QkYwIiBkPSJNMTAuOTk4IDBDMTcuMDUxIDAgMjEuOTk2IDQuOTQgMjEuOTk2IDEwLjk4OWMwIDYuMDQ4LTQuOTQ1IDEwLjk4OS0xMC45OTggMTAuOTg5QzQuOTQ2IDIxLjk3OCAwIDE3LjAzNyAwIDEwLjk4OUMwIDQuOTQgNC45NDYgMCAxMC45OTggMFoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNOC45NzkgMTIuODJsNS4zOC03LjcwOSAxLjAyNC43MTMtNi4yNzkgOC45OTJMNi4wMjYgMTEuNDlsLjY1LTEuMDY0IDIuMzAzIDIuMzk0WiIvPjwvZz48L3N2Zz4=" class="verified-badge" alt="Verified">
+                    </div>
+                    <div class="user-handle">@Naxtool2025</div>
+                </div>
+            </div>
+
+            <div class="tweet-text">
+                Just launched my new fake tweet generator! Check it out and create realistic-looking tweets in seconds. #FakeTweets #WebDev
+            </div>
+
+            <div class="tweet-time">
+                6:26 AM · Mar 2, 2025 · Twitter Web App
+            </div>
+
+            <div class="tweet-stats">
+                <div class="stat">
+                    <span class="stat-number">328</span>
+                    <span class="stat-label"> Retweets</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">42</span>
+                    <span class="stat-label"> Quotes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2,451</span>
+                    <span class="stat-label"> Likes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">517</span>
+                    <span class="stat-label"> Bookmarks</span>
+                </div>
+            </div>
+
+            <div class="tweet-actions">
+                <button class="action-button action-comment">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.0459 2.242L9.89795 2.241H9.89695C5.52195 2.241 2.09695 5.666 2.09695 10.041C2.09695 14.142 5.28195 17.101 9.56095 17.101H11.5219V19.501C11.5219 19.781 11.6559 20.028 11.8949 20.15C11.9689 20.19 12.0529 20.21 12.1349 20.21C12.2879 20.21 12.4409 20.15 12.5619 20.039C12.8459 19.78 17.9219 15.152 18.8879 13.24C19.7019 11.703 20.1419 10.211 20.1449 8.63C20.1409 5.055 17.5469 2.242 14.0459 2.242ZM17.8329 12.731C17.1989 14.002 14.0369 16.965 12.5219 18.321V16.521C12.5219 16.071 12.1569 15.701 11.7019 15.701H9.56095C6.30795 15.701 3.49695 13.225 3.49695 10.041C3.49695 6.437 6.29295 3.641 9.89595 3.641L14.0459 3.642C16.5919 3.642 18.7359 5.784 18.7359 8.631C18.7339 9.949 18.3569 11.183 17.8329 12.731Z" fill="currentColor"/>
+                    </svg>
+                    Comment
+                </button>
+                <button class="action-button action-retweet">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23.77 15.67C23.478 15.377 23.003 15.377 22.71 15.67L20.49 17.89V7.65C20.49 5.582 18.807 3.9 16.74 3.9H10.89C10.476 3.9 10.14 4.236 10.14 4.65C10.14 5.064 10.476 5.4 10.89 5.4H16.74C17.98 5.4 18.99 6.41 18.99 7.65V17.89L16.77 15.67C16.477 15.377 16.002 15.377 15.71 15.67C15.418 15.963 15.418 16.438 15.71 16.73L19.21 20.23C19.355 20.377 19.547 20.45 19.74 20.45C19.933 20.45 20.123 20.377 20.27 20.23L23.77 16.73C24.064 16.438 24.064 15.963 23.77 15.67ZM13.11 18.95H7.26C6.02 18.95 5.01 17.94 5.01 16.7V6.46L7.23 8.68C7.377 8.825 7.567 8.9 7.76 8.9C7.953 8.9 8.145 8.827 8.29 8.68C8.583 8.387 8.583 7.912 8.29 7.62L4.79 4.12C4.497 3.827 4.022 3.827 3.73 4.12L0.23 7.62C-0.0626 7.912 -0.0626 8.387 0.23 8.68C0.523 8.973 0.998 8.973 1.29 8.68L3.51 6.46V16.7C3.51 18.768 5.193 20.45 7.26 20.45H13.11C13.524 20.45 13.86 20.114 13.86 19.7C13.86 19.286 13.524 18.95 13.11 18.95Z" fill="currentColor"/>
+                    </svg>
+                    Retweet
+                </button>
+                <button class="action-button action-like">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.638H11.986C9.403 21.59 1.95 14.856 1.95 8.478C1.95 5.414 4.475 2.724 7.352 2.724C9.348 2.724 10.936 3.994 11.999 5.708C13.058 3.998 14.648 2.724 16.644 2.724C19.524 2.724 22.046 5.414 22.046 8.479C22.046 14.855 14.594 21.589 12.011 21.636H12V21.638ZM7.354 4.225C5.27 4.225 3.45 6.213 3.45 8.48C3.45 14.22 10.485 20.076 12.001 20.138C13.519 20.076 20.55 14.221 20.55 8.48C20.55 6.213 18.73 4.225 16.646 4.225C14.787 4.225 13.4 5.84 12.866 7.483C12.698 7.926 12.272 8.216 11.805 8.216C11.338 8.216 10.913 7.926 10.745 7.483C10.211 5.839 8.824 4.225 7.354 4.225Z" fill="currentColor"/>
+                    </svg>
+                    Like
+                </button>
+                <button class="action-button action-share">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.53 7.47L12.53 2.47C12.237 2.177 11.762 2.177 11.47 2.47L6.47 7.47C6.176 7.763 6.176 8.238 6.47 8.53C6.764 8.823 7.239 8.823 7.53 8.53L11.25 4.81V15C11.25 15.414 11.586 15.75 12 15.75C12.414 15.75 12.75 15.414 12.75 15V4.81L16.47 8.53C16.616 8.677 16.808 8.75 17 8.75C17.192 8.75 17.384 8.677 17.53 8.53C17.823 8.238 17.823 7.763 17.53 7.47Z" fill="currentColor"/>
+                        <path d="M19.708 21.944H4.292C3.028 21.944 2 20.916 2 19.652V14C2 13.586 2.336 13.25 2.75 13.25C3.164 13.25 3.5 13.586 3.5 14V19.652C3.5 20.089 3.855 20.444 4.292 20.444H19.708C20.145 20.444 20.5 20.089 20.5 19.652V14C20.5 13.586 20.836 13.25 21.25 13.25C21.664 13.25 22 13.586 22 14V19.652C22 20.916 20.972 21.944 19.708 21.944Z" fill="currentColor"/>
+                    </svg>
+                    Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add theme toggle functionality
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+        });
+    </script>
+</body>
+</html>
